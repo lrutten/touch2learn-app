@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('t2l.services', [])
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
@@ -32,7 +32,9 @@ angular.module('starter.services', [])
   }];
 
   return {
-    all: function() {
+    all: function() 
+    {
+      console.log("Chats.all()");
       return chats;
     },
     remove: function(chat) {
