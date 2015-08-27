@@ -1,3 +1,30 @@
+// Modelklassen
+
+var Werkvorm = function(idd, ttl)
+{
+   this.id    = idd;
+   this.title = ttl;
+}
+
+Werkvorm.prototype.toon = function()
+{
+   console.log("id " + this.id + " title " + this.title);
+}
+
+/*
+var p1 = new Persoon("Jan", "Jans");
+p1.toon();
+var p2 = new Persoon("Peter", "Peters");
+p2.toon();
+*/
+
+
+
+
+
+
+
+
 angular.module('t2l.services', [])
 
 .factory('Chats', function() {
@@ -47,6 +74,37 @@ angular.module('t2l.services', [])
         }
       }
       return null;
+    }
+  };
+})
+
+.factory('Learn', function($http)
+{
+  // Might use a resource here that returns a JSON array
+  $http.get('https://cors-test.appspot.com/test').then(function(resp) 
+  {
+    console.log('Success', resp);
+    // For JSON responses, resp.data contains the result
+  },
+  function(err) 
+  {
+    console.error('ERR', err);
+    // err.status will contain the status code
+  })
+  // Some fake testing data
+  var werkvormen = 
+  [
+    new Werkvorm(9, "Denken"),
+    new Werkvorm(8, "Schrijven")
+  ];
+
+  return {
+    all: function() 
+    {
+      console.log("Learn.all()");
+      var wv = new Werkvorm(7, "lezen");
+      wv.toon();
+      return werkvormen;
     }
   };
 });

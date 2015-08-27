@@ -32,7 +32,7 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
   $stateProvider
 
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
@@ -46,6 +46,16 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
       'tab-dash': {
         templateUrl: 'templates/tab-dash.html',
         controller: 'DashCtrl'
+      }
+    }
+  })
+
+  .state('tab.werkvormen', {
+    url: '/werkvormen',
+    views: {
+      'tab-werkvormen': {
+        templateUrl: 'templates/tab-werkvormen.html',
+        controller: 'WerkvormenCtrl'
       }
     }
   })

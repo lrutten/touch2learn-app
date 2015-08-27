@@ -17,6 +17,10 @@ angular.module('t2l.controllers', [])
   };
 })
 
+.controller('WerkvormenCtrl', function($scope, Learn) {
+  $scope.werkvormen = Learn.all();
+})
+
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
