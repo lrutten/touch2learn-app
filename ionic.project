@@ -1,4 +1,15 @@
 {
   "name": "Touch2Learn",
-  "app_id": ""
+  "app_id": "",
+  "proxies":
+  [
+    {
+      "path": "/apps",
+      "proxyUrl": "http://192.168.1.7/json-api/apps"
+    },
+    {
+      "path": "/werkvormendocent",
+      "proxyUrl": "http://192.168.1.7/json-api/werkvormendocent"
+    }
+  ]
 }

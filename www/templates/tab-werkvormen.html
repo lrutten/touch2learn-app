@@ -3,6 +3,9 @@
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="werkvorm in werkvormen" type="item-text-wrap" href="#/tab/werkvormen/{{werkvorm.id}}">
         <h2>{{werkvorm.title}}</h2>
+        <div>
+          {{werkvorm.body}}
+        </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(chat)">

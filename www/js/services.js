@@ -1,9 +1,10 @@
 // Modelklassen
 
-var Werkvorm = function(idd, ttl)
+var Werkvorm = function(idd, ttl, bdy)
 {
    this.id    = idd;
    this.title = ttl;
+   this.body  = bdy;
 }
 
 Werkvorm.prototype.toon = function()
@@ -80,30 +81,72 @@ angular.module('t2l.services', [])
 
 .factory('Learn', function($http)
 {
-  // Might use a resource here that returns a JSON array
-  $http.get('https://cors-test.appspot.com/test').then(function(resp) 
-  {
-    console.log('Success', resp);
-    // For JSON responses, resp.data contains the result
-  },
-  function(err) 
-  {
-    console.error('ERR', err);
-    // err.status will contain the status code
-  })
+   var werkvormen = [];
+   
+   // lees meer over cors bij
+   //     http://blog.ionic.io/handling-cors-issues-in-ionic/
+
+   //$http.get('http://192.168.1.7/json-api/apps').then(
+   $http.get('http://localhost:8100/werkvormendocent').then(
+      function(resp) 
+      {
+         console.log('Success', resp);
+         // For JSON responses, resp.data contains the result
+       
+         var nodes = resp.data.nodes;
+         for (var i=0; i<nodes.length; i++)
+         {
+            console.log("node i ", i);
+	    var node = nodes[i].node;
+            console.log("node      ", node.title);
+            console.log("node nid  ", node.nid);
+            console.log("node body ", node.body);
+	    
+            werkvormen.push(new Werkvorm(node.nid, node.title, node.body));
+         }
+      },
+      function(err) 
+      {
+         console.error('ERR', err);
+         // err.status will contain the status code
+
+//   err propname, data
+//   err propname, status
+//   err propname, headers
+//   err propname, config
+//   err propname, statusText
+
+         for(var propertyName in err) 
+         {
+            console.error('err prop name', propertyName);
+         }
+
+         console.error('err.status     ', err.status);
+         console.error('err.statusText ', err.statusText);
+         console.error('err.config     ', err.config);
+         console.error('err.headers    ', err.headers);
+         console.error('err.status     ', err.status);
+      }
+   )
+  
   // Some fake testing data
+  /*
   var werkvormen = 
   [
     new Werkvorm(9, "Denken"),
     new Werkvorm(8, "Schrijven")
   ];
+   */
+  
+  //werkvormen.push(new Werkvorm(9, "Denken"));
+  //werkvormen.push(new Werkvorm(8, "Schrijven"));
 
   return {
     all: function() 
     {
       console.log("Learn.all()");
-      var wv = new Werkvorm(7, "lezen");
-      wv.toon();
+      //var wv = new Werkvorm(7, "lezen");
+      //wv.toon();
       return werkvormen;
     }
   };
