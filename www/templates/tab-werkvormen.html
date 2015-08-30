@@ -1,8 +1,11 @@
 <ion-view view-title="Werkvormen">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="werkvorm in werkvormen" type="item-text-wrap" href="#/tab/werkvormen/{{werkvorm.id}}">
-        <h2>{{werkvorm.title}}</h2>
+      <ion-item 
+        class="item-remove-animate item-avatar item-icon-right item-text-wrap" 
+        ng-repeat="werkvorm in werkvormen" 
+        href="#/tab/werkvormen/{{werkvorm.id}}">
+        <h2><b>{{werkvorm.title}}</b></h2>
         <div>
           {{werkvorm.body}}
         </div>
