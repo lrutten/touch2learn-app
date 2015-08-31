@@ -1,5 +1,7 @@
 // Modelklassen
 
+// Werkvorm klasse
+
 var Werkvorm = function(idd, ttl, bdy)
 {
    this.id    = idd;
@@ -19,12 +21,168 @@ var p2 = new Persoon("Peter", "Peters");
 p2.toon();
 */
 
+// Woord klasse
+
+var Woord = function(wrd)
+{
+   this.tekst = wrd;
+}
+
+Woord.prototype.toon = function()
+{
+   console.log("Woord " + this.tekst);
+}
+
+/*
+ * Voorbeeld
+
+ http://www.mojavelinux.com/articles/javascript_hashes.html
+
+function HashTable(obj)
+{
+    this.length = 0;
+    this.items = {};
+    for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            this.items[p] = obj[p];
+            this.length++;
+        }
+    }
+
+    this.setItem = function(key, value)
+    {
+        var previous = undefined;
+        if (this.hasItem(key)) {
+            previous = this.items[key];
+        }
+        else {
+            this.length++;
+        }
+        this.items[key] = value;
+        return previous;
+    }
+
+    this.getItem = function(key) {
+        return this.hasItem(key) ? this.items[key] : undefined;
+    }
+
+    this.hasItem = function(key)
+    {
+        return this.items.hasOwnProperty(key);
+    }
+   
+    this.removeItem = function(key)
+    {
+        if (this.hasItem(key)) {
+            previous = this.items[key];
+            this.length--;
+            delete this.items[key];
+            return previous;
+        }
+        else {
+            return undefined;
+        }
+    }
+
+    this.keys = function()
+    {
+        var keys = [];
+        for (var k in this.items) {
+            if (this.hasItem(k)) {
+                keys.push(k);
+            }
+        }
+        return keys;
+    }
+
+    this.values = function()
+    {
+        var values = [];
+        for (var k in this.items) {
+            if (this.hasItem(k)) {
+                values.push(this.items[k]);
+            }
+        }
+        return values;
+    }
+
+    this.each = function(fn) {
+        for (var k in this.items) {
+            if (this.hasItem(k)) {
+                fn(k, this.items[k]);
+            }
+        }
+    }
+
+    this.clear = function()
+    {
+        this.items = {}
+        this.length = 0;
+    }
+}
+        
+*/
+
+
+// Vocabulaire klasse
+
+var Vocabulaire = function()
+{
+   this.woorden = {};  
+}
+
+Vocabulaire.prototype.toon = function()
+{
+   console.log("Vocabulaire woorden " + this.woorden);
+}
+
+Vocabulaire.prototype.addWoord = function(w)
+{
+   if (woorden.hasOwnProperty(w))
+   {
+      return woorden[w];
+   }
+   else
+   {
+      var woord = new Woord(w);
+      woorden[w] = woord;
+      return w;
+   }
+}
 
 
 
 
 
+// TouchInfo klasse
 
+var TouchInfo = function()
+{
+   this.werkvormen = [];
+   this.intenties = new Vocabulaire();
+}
+
+TouchInfo.prototype.toon = function()
+{
+   console.log("TouchInfo #werkvormen " + this.werkvormen.length);
+}
+
+TouchInfo.prototype.addWerkvorm = function(wvrm)
+{
+   this.werkvormen.push(wvrm);
+}
+
+TouchInfo.prototype.addIntentie = function(intnt)
+{
+   this.intenties.addWoord(intnt);
+}
+
+TouchInfo.prototype.all = function()
+{
+   return this.werkvormen;
+}
+
+// Angular module
 
 angular.module('t2l.services', [])
 
@@ -81,7 +239,7 @@ angular.module('t2l.services', [])
 
 .factory('Learn', function($http)
 {
-   var werkvormen = [];
+   var touchinfo = new TouchInfo();
    
    // lees meer over cors bij
    //     http://blog.ionic.io/handling-cors-issues-in-ionic/
@@ -101,8 +259,24 @@ angular.module('t2l.services', [])
             console.log("node      ", node.title);
             console.log("node nid  ", node.nid);
             console.log("node body ", node.body);
+            console.log("node intenties " + node.intenties);
 	    
-            werkvormen.push(new Werkvorm(node.nid, node.title, node.body));
+	    var intenties = node.intenties.split(",");
+	    
+            console.log("intenties " + intenties);
+            console.log("intenties " + intenties.length);
+	    
+	    for (var j=0; j<intenties.length; j++)
+	    {
+               console.log("   intentie " + intenties[j].trim());
+	      
+	       
+	       // Hier verdergaan met bijvoegen intentie in touchinfo
+	    }
+	    
+	    
+            //werkvormen.push(new Werkvorm(node.nid, node.title, node.body));
+            touchinfo.addWerkvorm(new Werkvorm(node.nid, node.title, node.body));
          }
       },
       function(err) 
@@ -147,7 +321,7 @@ angular.module('t2l.services', [])
       console.log("Learn.all()");
       //var wv = new Werkvorm(7, "lezen");
       //wv.toon();
-      return werkvormen;
+      return touchinfo.werkvormen;
     }
   };
 });
