@@ -17,8 +17,14 @@ angular.module('t2l.controllers', [])
   };
 })
 
+.controller('WoordenCtrl', function($scope, Learn) {
+  //console.log("WoordenCtrl function()");
+
+  $scope.intenties = Learn.alleIntenties();
+})
+
 .controller('WerkvormenCtrl', function($scope, Learn) {
-  $scope.werkvormen = Learn.all();
+  $scope.werkvormen = Learn.alleWerkvormen();
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {

@@ -50,6 +50,16 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+  .state('tab.woorden', {
+    url: '/woorden',
+    views: {
+      'tab-woorden': {
+        templateUrl: 'templates/tab-woorden.html',
+        controller: 'WoordenCtrl'
+      }
+    }
+  })
+
   .state('tab.werkvormen', {
     url: '/werkvormen',
     views: {

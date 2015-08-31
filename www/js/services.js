@@ -14,18 +14,13 @@ Werkvorm.prototype.toon = function()
    console.log("id " + this.id + " title " + this.title);
 }
 
-/*
-var p1 = new Persoon("Jan", "Jans");
-p1.toon();
-var p2 = new Persoon("Peter", "Peters");
-p2.toon();
-*/
 
 // Woord klasse
 
 var Woord = function(wrd)
 {
-   this.tekst = wrd;
+   this.tekst   = wrd;
+   this.enabled = true;
 }
 
 Woord.prototype.toon = function()
@@ -128,28 +123,57 @@ function HashTable(obj)
 
 var Vocabulaire = function()
 {
+   this.teller  = 0;
    this.woorden = {};  
 }
 
 Vocabulaire.prototype.toon = function()
 {
-   console.log("Vocabulaire woorden " + this.woorden);
+   console.log("Vocabulaire woorden #" + this.teller);
+   
+   for (var w in this.woorden)
+   {
+      console.log("  w " + w);
+      console.log("  woord " + this.woorden[w].tekst);
+   }
 }
 
 Vocabulaire.prototype.addWoord = function(w)
 {
-   if (woorden.hasOwnProperty(w))
+   //console.log("      intentie bijvoegen3 (" + w + ")");
+   if (this.woorden.hasOwnProperty(w))
    {
-      return woorden[w];
+      //console.log("      intentie bijvoegen4a (" + w + ")");
+      return this.woorden[w];
    }
    else
    {
+      //console.log("      intentie bijvoegen4b (" + w + ")");
       var woord = new Woord(w);
-      woorden[w] = woord;
-      return w;
+      this.woorden[w] = woord;
+      this.teller++;
+      return woord;
    }
 }
 
+Vocabulaire.prototype.hasWoord = function(w)
+{
+   return this.woorden.hasOwnProperty(w);
+}
+
+Vocabulaire.prototype.alleWoorden = function()
+{
+   console.log("alleWoorden()");
+   var wrden = [];
+   for (var w in this.woorden)
+   {
+      console.log("  w " + w);
+      var wrd = this.woorden[w];
+      wrden.push(wrd);
+   }
+   console.log("alleWoorden #" + wrden.length);
+   return wrden;
+}
 
 
 
@@ -165,6 +189,7 @@ var TouchInfo = function()
 TouchInfo.prototype.toon = function()
 {
    console.log("TouchInfo #werkvormen " + this.werkvormen.length);
+   this.intenties.toon();
 }
 
 TouchInfo.prototype.addWerkvorm = function(wvrm)
@@ -174,19 +199,35 @@ TouchInfo.prototype.addWerkvorm = function(wvrm)
 
 TouchInfo.prototype.addIntentie = function(intnt)
 {
+   //console.log("      intentie bijvoegen2 (" + intnt + ")");
    this.intenties.addWoord(intnt);
 }
 
-TouchInfo.prototype.all = function()
+TouchInfo.prototype.alleWerkvormen = function()
 {
+   console.log("werkvormen #" + this.werkvormen.length);
+   
    return this.werkvormen;
 }
+
+TouchInfo.prototype.alleIntenties = function()
+{
+   var aw = this.intenties.alleWoorden();
+   for (var iw=0; iw<aw.length; iw++)
+   {
+      var wo = aw[iw];
+      console.log("wo " + wo);
+   }
+   return aw;
+}
+
 
 // Angular module
 
 angular.module('t2l.services', [])
 
-.factory('Chats', function() {
+.factory('Chats', function() 
+{
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -216,19 +257,23 @@ angular.module('t2l.services', [])
     lastText: 'This is wicked good ice cream.',
     face: 'https://pbs.twimg.com/profile_images/578237281384841216/R3ae1n61.png'
   }];
-
+  
   return {
-    all: function() 
+    all: function()
     {
       console.log("Chats.all()");
       return chats;
     },
-    remove: function(chat) {
+    remove: function(chat) 
+    {
       chats.splice(chats.indexOf(chat), 1);
     },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
+    get: function(chatId) 
+    {
+      for (var i = 0; i < chats.length; i++) 
+      {
+        if (chats[i].id === parseInt(chatId)) 
+        {
           return chats[i];
         }
       }
@@ -244,40 +289,44 @@ angular.module('t2l.services', [])
    // lees meer over cors bij
    //     http://blog.ionic.io/handling-cors-issues-in-ionic/
 
-   //$http.get('http://192.168.1.7/json-api/apps').then(
-   $http.get('http://localhost:8100/werkvormendocent').then(
+   //$http.get('http://192.168.1.6/json-api/apps').then(
+   $http.get('http://192.168.1.6/json-api/werkvormendocent').then(
+   //$http.get('http://localhost:8100/werkvormendocent').then(
       function(resp) 
       {
-         console.log('Success', resp);
+         console.log('Success get', resp);
          // For JSON responses, resp.data contains the result
        
          var nodes = resp.data.nodes;
          for (var i=0; i<nodes.length; i++)
          {
-            console.log("node i ", i);
+            //console.log("node i ", i);
 	    var node = nodes[i].node;
-            console.log("node      ", node.title);
-            console.log("node nid  ", node.nid);
-            console.log("node body ", node.body);
-            console.log("node intenties " + node.intenties);
+            //console.log("node      " + node.title);
+            //console.log("node nid  " + node.nid);
+            //console.log("node body ", node.body);
+            //console.log("node intenties " + node.intenties);
 	    
 	    var intenties = node.intenties.split(",");
 	    
-            console.log("intenties " + intenties);
-            console.log("intenties " + intenties.length);
+            //console.log("intenties " + intenties);
+            //console.log("intenties " + intenties.length);
 	    
 	    for (var j=0; j<intenties.length; j++)
 	    {
-               console.log("   intentie " + intenties[j].trim());
+               //console.log("   intentie " + intenties[j].trim());
 	      
 	       
 	       // Hier verdergaan met bijvoegen intentie in touchinfo
+	       var intntie = intenties[j].trim();
+               //console.log("      intentie bijvoegen (" + intntie + ")");
+	       touchinfo.addIntentie(intntie);
 	    }
-	    
 	    
             //werkvormen.push(new Werkvorm(node.nid, node.title, node.body));
             touchinfo.addWerkvorm(new Werkvorm(node.nid, node.title, node.body));
          }
+         //touchinfo.toon();
       },
       function(err) 
       {
@@ -290,8 +339,7 @@ angular.module('t2l.services', [])
 //   err propname, config
 //   err propname, statusText
 
-         for(var propertyName in err) 
-         {
+         for (var propertyName in err) {
             console.error('err prop name', propertyName);
          }
 
@@ -315,13 +363,22 @@ angular.module('t2l.services', [])
   //werkvormen.push(new Werkvorm(9, "Denken"));
   //werkvormen.push(new Werkvorm(8, "Schrijven"));
 
-  return {
-    all: function() 
-    {
-      console.log("Learn.all()");
-      //var wv = new Werkvorm(7, "lezen");
-      //wv.toon();
-      return touchinfo.werkvormen;
-    }
-  };
+   return {
+      alleWerkvormen: function() 
+      {
+         console.log("Learn.alleWerkvormen()");
+
+	 //var wv = new Werkvorm(7, "lezen");
+         //wv.toon();
+	 
+         //return touchinfo.werkvormen;
+         return touchinfo.alleWerkvormen();
+      },
+      alleIntenties: function() 
+      {
+         console.log("Learn.alleIntenties()");
+         //return touchinfo.intenties.alleWoorden();
+         return touchinfo.alleIntenties();
+      }
+   };
 });
