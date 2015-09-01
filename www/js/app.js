@@ -24,7 +24,6 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
-
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -66,6 +65,36 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
       'tab-werkvormen': {
         templateUrl: 'templates/tab-werkvormen.html',
         controller: 'WerkvormenCtrl'
+      }
+    }
+  })
+
+  .state('tab.werkvorm', {
+    url: '/werkvormen/:werkvormId',
+    views: {
+        'tab-werkvormen': {
+          templateUrl: 'templates/tab-werkvorm.html',
+          controller: 'WerkvormCtrl'
+      }
+    }
+  })
+
+  .state('tab.apps', {
+    url: '/apps',
+    views: {
+      'tab-apps': {
+        templateUrl: 'templates/tab-apps.html',
+        controller: 'AppsCtrl'
+      }
+    }
+  })
+
+  .state('tab.werkapp', {
+    url: '/apps/:appId',
+    views: {
+        'tab-apps': {
+          templateUrl: 'templates/tab-app.html',
+          controller: 'AppCtrl'
       }
     }
   })

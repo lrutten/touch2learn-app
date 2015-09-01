@@ -1,0 +1,31 @@
+<ion-view view-title="App">
+  <ion-content class="padding">
+    
+    <img ng-src="{{app.extra.afbeelding}}" style="width: 64px; height: 64px">    
+    <h2>{{app.title}}</h2>
+
+    <p>
+      {{app.extra.afbeelding}}
+    </p>
+
+    <p>
+      {{app.extra.kortebeschrijving}}
+    </p>
+    
+    <h3>Pluspunten</h3>
+    <ul class="list card">
+       <li class="item item-icon-left item-text-wrap" ng-repeat="plus in app.extra.pluspunten">
+         <i class="icon ion-plus-round"></i>
+         {{plus}}
+       </li>
+    </ul>
+    <h3>Minpunten</h3>
+    <ul class="list card">
+       <li class="item item-icon-left item-text-wrap" ng-repeat="min in app.extra.minpunten">
+         <i class="icon ion-minus-round"></i>
+         {{min}}
+       </li>
+    </ul>
+  </ion-content>
+</ion-view>
+

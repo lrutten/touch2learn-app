@@ -25,7 +25,23 @@ angular.module('t2l.controllers', [])
 })
 
 .controller('WerkvormenCtrl', function($scope, Learn) {
+  console.log("WerkvormenCtrl function()");
   $scope.werkvormen = Learn.alleWerkvormen();
+})
+
+.controller('WerkvormCtrl', function($scope, $stateParams, Learn) {
+  console.log("WerkvormCtrl function()");
+  $scope.werkvorm = Learn.getWerkvorm($stateParams.werkvormId);
+})
+
+.controller('AppsCtrl', function($scope, Learn) {
+  console.log("AppsCtrl function()");
+  $scope.apps = Learn.alleApps();
+})
+
+.controller('AppCtrl', function($scope,  $stateParams, Learn) {
+  console.log("AppCtrl function()");
+  $scope.app = Learn.getApp($stateParams.appId);
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {

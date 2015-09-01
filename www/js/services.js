@@ -1,3 +1,9 @@
+// constante
+
+//var path = "http://localhost:8100";
+var path = "http://192.168.1.8/json-api"
+
+
 // Modelklassen
 
 // Werkvorm klasse
@@ -8,6 +14,7 @@ var Werkvorm = function(idd, ttl, bdy)
    this.title   = ttl;
    this.body    = bdy;
    this.woorden = new Vocabulaire();
+   this.extra   = null;
 }
 
 Werkvorm.prototype.toon = function()
@@ -30,6 +37,40 @@ Werkvorm.prototype.getEnabled = function()
    return this.woorden.getEnabled();
 }
 
+// Extra klasse
+
+
+var Extra = function(pra, did)
+{
+   this.praktijkvoorbeeld = pra;
+   this.didopp            = did;
+   this.apps              = [];
+}
+
+
+// klasse App
+
+var App = function(nd, ttl)
+{
+   this.id    = nd;
+   this.title = ttl;
+   this.extra = null;
+}
+
+App.prototype.toon = function()
+{
+   console.log("App " + this.id + " " + this.title);
+}
+
+// ExtraApp klasse
+
+var ExtraApp = function(afb, kor, plusp, minp)
+{
+   this.afbeelding        = afb;
+   this.kortebeschrijving = kor;
+   this.pluspunten        = plusp;
+   this.minpunten         = minp;
+}
 
 // Woord klasse
 
@@ -240,6 +281,7 @@ var TouchInfo = function()
    this.werkvormen    = [];
    this.intenties     = new Vocabulaire();
    this.begeleidingen = new Vocabulaire();
+   this.apps          = [];
 }
 
 TouchInfo.prototype.toon = function()
@@ -264,6 +306,12 @@ TouchInfo.prototype.addBegeleiding = function(begl)
    //console.log("      begeleiding bijvoegen2 (" + begl + ")");
    return this.begeleidingen.addWoord(begl);
 }
+
+TouchInfo.prototype.addApp = function(app)
+{
+   this.apps.push(app);
+}
+
 
 /*
 TouchInfo.prototype.alleWerkvormen = function()
@@ -292,6 +340,65 @@ TouchInfo.prototype.alleWerkvormen = function()
    return lijst;
 }
 
+TouchInfo.prototype.getExtra = function($http, wi, werkv)
+{
+   //$http.get('http://localhost:8100/werkvormdocent?nid=' + wi).then(
+   $http.get(path + '/werkvormdocent?nid=' + wi).then(
+      function(resp) 
+      {
+         console.log('Success get extra', resp);
+         var wv = resp.data.werkvormendocent[0].werkvormdocent;
+         console.log("wv " + wv);
+         console.log("wv.apps " + wv.apps);
+         console.log("wv.praktijkvoorbeeld " + wv.praktijkvoorbeeld);
+         console.log("wv.didopp " + wv['didactischeopportuniteiten ']);
+ 
+         werkv.extra = new Extra(wv.praktijkvoorbeeld, wv['didactischeopportuniteiten ']);
+
+         var apps = wv.apps.split(",");
+    
+         console.log("apps " + apps);
+         console.log("apps.length " + apps.length);
+    
+         for (var j=0; j<apps.length; j++)
+         {
+            var app = apps[j].trim();
+            console.log("      app bijvoegen (" + app + ")");
+            //var o_intntie = touchinfo.addIntentie(intntie);
+            //o_intntie.addWerkvorm(wv);
+            //o_intntie.toon();
+            //wv.addWoord(o_intntie);
+         }
+      },
+      function(err) 
+      {
+         console.error('error extra', err);
+      }
+   )
+}
+
+TouchInfo.prototype.getWerkvorm = function($http, werkvormId)
+{
+   console.log("TouchInfo.getWerkvorm " + werkvormId);
+   for (var i = 0; i < this.werkvormen.length; i++) 
+   {
+      var wi = parseInt(werkvormId);
+      if (this.werkvormen[i].id == wi) 
+      {
+         console.log("TouchInfo.getWerkvorm gevonden");
+	 var werkv = this.werkvormen[i];
+	 if (werkv.extra == null)
+	 {
+            console.log("   extra null");
+	    this.getExtra($http, wi, werkv);
+            console.log("   extra " + werkv.extra);
+	 }
+         return werkv;
+      }
+   }
+   console.log("TouchInfo.getWerkvorm niet gevonden");
+   return null;
+}
 
 TouchInfo.prototype.alleIntenties = function()
 {
@@ -314,6 +421,92 @@ TouchInfo.prototype.alleBegeleidingen = function()
    }
    return aw;
 }
+
+TouchInfo.prototype.alleApps = function()
+{
+   return this.apps;
+}
+
+TouchInfo.prototype.getExtraApp = function($http, ai, app)
+{
+   //$http.get('http://localhost:8100/app?nid=' + ai).then(
+   $http.get(path + '/app?nid=' + ai).then(
+      function(resp) 
+      {
+         console.log('Success get extraapp', resp);
+         var ap = resp.data.apps[0].app;
+         console.log("ap " + ap);
+         console.log("ap.afbeelding " + ap.afbeelding);
+         console.log("ap.afbeelding.src " + ap.afbeelding.src);
+
+         var plusp = ap.pluspunten.split("\n");
+         console.log("plusp "        + ap.pluspunten);
+         console.log("plusp.length " + plusp.length);
+         var minp = ap.minpunten.split("\n");
+         console.log("minp "        + ap.minpunten);
+         console.log("minp.length " + minp.length);
+
+         app.extra = new ExtraApp(ap.afbeelding.src, ap.kortebeschrijving, plusp, minp);
+
+	 /*
+	  Nog af te halen:
+	     kortebeschrijving
+	     minpunten
+	     pluspunten
+	     webapp
+	     windowsapp
+	     iosapp
+	     androidapp
+	 
+         var apps = wv.apps.split(",");
+    
+         console.log("apps " + apps);
+         console.log("apps.length " + apps.length);
+    
+         for (var j=0; j<apps.length; j++)
+         {
+            var app = apps[j].trim();
+            console.log("      app bijvoegen (" + app + ")");
+            //var o_intntie = touchinfo.addIntentie(intntie);
+            //o_intntie.addWerkvorm(wv);
+            //o_intntie.toon();
+            //wv.addWoord(o_intntie);
+         }
+         */
+      },
+      function(err) 
+      {
+         console.error('error extra', err);
+      }
+   )
+}
+
+TouchInfo.prototype.getApp = function($http, appId)
+{
+   console.log("TouchInfo.getApp " + appId);
+   for (var i = 0; i < this.apps.length; i++) 
+   {
+      var ai = parseInt(appId);
+      if (this.apps[i].id == ai) 
+      {
+         console.log("TouchInfo.getApp gevonden");
+	 var app = this.apps[i];
+	 
+	 if (app.extra == null)
+	 {
+            console.log("   app extra null");
+	    this.getExtraApp($http, ai, app);
+            console.log("   extra " + app.extra);
+	 }
+	 
+         return app;
+      }
+   }
+   console.log("TouchInfo.getApp niet gevonden");
+   return null;
+}
+
+
 
 
 // Angular module
@@ -376,16 +569,42 @@ angular.module('t2l.services', [])
   };
 })
 
-.factory('Learn', function($http)
+.factory('Learn', function($http, $rootScope)
 {
    var touchinfo = new TouchInfo();
+   
+   // Debug ui-router
+   $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams)
+   {
+      console.log('$stateChangeStart to '+toState.to+' - fired when the transition begins. toState,toParams : \n',toState, toParams);
+   });
+   $rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams, error)
+   {
+      console.log('$stateChangeError - fired when an error occurs during transition.');
+      console.log(arguments);
+   });
+   $rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams)
+   {
+      console.log('$stateChangeSuccess to '+toState.name+' - fired once the state transition is complete.');
+   });
+
+   $rootScope.$on('$viewContentLoaded',function(event)
+   {
+      console.log('$viewContentLoaded - fired after dom rendered',event);
+   });
+   $rootScope.$on('$stateNotFound',function(event, unfoundState, fromState, fromParams)
+   {
+      console.log('$stateNotFound '+unfoundState.to+'  - fired when a state cannot be found by its name.');
+      console.log(unfoundState, fromState, fromParams);
+   });
    
    // lees meer over cors bij
    //     http://blog.ionic.io/handling-cors-issues-in-ionic/
 
    //$http.get('http://192.168.1.6/json-api/apps').then(
    //$http.get('http://192.168.1.6/json-api/werkvormendocent').then(
-   $http.get('http://localhost:8100/werkvormendocent').then(
+   //$http.get('http://localhost:8100/werkvormendocent').then(
+   $http.get(path + '/werkvormendocent').then(
       function(resp) 
       {
          console.log('Success get', resp);
@@ -468,7 +687,105 @@ angular.module('t2l.services', [])
          console.error('err.status     ', err.status);
       }
    )
-  
+   
+   
+   
+   // Lees alle apps
+   //$http.get('http://localhost:8100/apps').then(
+   $http.get(path + '/apps').then(
+      function(resp) 
+      {
+         console.log('Success apps get', resp);
+         // For JSON responses, resp.data contains the result
+       
+         var apps = resp.data.apps;
+         for (var i=0; i<apps.length; i++)
+         {
+	    // A. Haal de app
+	   
+            //console.log("node i ", i);
+	    var app = apps[i].app;
+            console.log("app      " + app.title);
+            console.log("app nid  " + app.nid);
+            //console.log("node body ", node.body);
+            //console.log("node intenties " + node.intenties);
+
+   
+	    // B. Maak het app object
+            var appo = new App(app.nid, app.title);
+	    appo.toon();
+            touchinfo.addApp(appo);
+
+            /*
+	    // C. Verwerk de intenties
+	    var intenties = node.intenties.split(",");
+	    
+            //console.log("intenties " + intenties);
+            //console.log("intenties " + intenties.length);
+	    
+	    for (var j=0; j<intenties.length; j++)
+	    {
+               //console.log("   intentie " + intenties[j].trim());
+	      
+	       
+	       // Hier verdergaan met bijvoegen intentie in touchinfo
+	       var intntie = intenties[j].trim();
+               //console.log("      intentie bijvoegen (" + intntie + ")");
+	       var o_intntie = touchinfo.addIntentie(intntie);
+	       o_intntie.addWerkvorm(wv);
+	       //o_intntie.toon();
+	       wv.addWoord(o_intntie);
+	    }
+    
+
+	    // D. Verwerk de begeleiding
+	    //console.log("node begeleiding " + node.begeleiding);
+	    var begeleidingen = node.begeleiding.split(",");
+	    for (var k=0; k<begeleidingen.length; k++)
+	    {
+               //console.log("   begeleiding " + begeleidingen[k].trim());
+	      
+	       
+	       // Hier verdergaan met bijvoegen intentie in touchinfo
+	       var bgl = begeleidingen[k].trim();
+               //console.log("      begeleiding bijvoegen (" + bgl + ")");
+	       var o_bgl = touchinfo.addBegeleiding(bgl);
+	       o_bgl.addWerkvorm(wv);
+	       wv.addWoord(o_bgl);
+	    }
+	    */
+         }
+         //touchinfo.toon();
+      },
+      function(err) 
+      {
+         console.error('ERR', err);
+         // err.status will contain the status code
+
+         for (var propertyName in err) 
+	 {
+            console.error('err prop name', propertyName);
+         }
+
+         console.error('err.status     ', err.status);
+         console.error('err.statusText ', err.statusText);
+         console.error('err.config     ', err.config);
+         console.error('err.headers    ', err.headers);
+         console.error('err.status     ', err.status);
+      }
+   )
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
   // Some fake testing data
   /*
   var werkvormen = 
@@ -492,6 +809,12 @@ angular.module('t2l.services', [])
          //return touchinfo.werkvormen;
          return touchinfo.alleWerkvormen();
       },
+      getWerkvorm: function(werkvormId)
+      {
+         console.log("Learn.getWerkvorm() " + werkvormId);
+
+	 return touchinfo.getWerkvorm($http, werkvormId);
+      },
       alleIntenties: function() 
       {
          console.log("Learn.alleIntenties()");
@@ -502,6 +825,17 @@ angular.module('t2l.services', [])
       {
          console.log("Learn.alleBegeleidingen()");
          return touchinfo.alleBegeleidingen();
+      },
+      alleApps: function() 
+      {
+         console.log("Learn.alleApps()");
+         return touchinfo.alleApps();
+      },
+      getApp: function(appId)
+      {
+         console.log("Learn.getApp() " + appId);
+
+	 return touchinfo.getApp($http, appId);
       }
    };
 });
