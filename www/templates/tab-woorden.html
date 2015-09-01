@@ -1,11 +1,24 @@
-<ion-view view-title="Intenties">
+<ion-view view-title="Selectie">
   <ion-content>
     <ion-list>
+      <div class="item item-divider">
+        Intenties
+      </div>
       <ion-item class="item item-checkbox" ng-repeat="intentie in intenties"> 
         <label class="checkbox">
-          <input type="checkbox" ng-model="intentie.enabled"/>
+          <input type="checkbox" ng-model="intentie.enabled" ng-change="intentie.toggle()"/>
         </label>
-        <h2>{{intentie.tekst}}</h2>
+        <h2>{{intentie.tekst}} ({{intentie.werkvormen.length}})</h2>
+      </ion-item>
+
+      <div class="item item-divider">
+        Begeleiding
+      </div>
+      <ion-item class="item item-checkbox" ng-repeat="begeleiding in begeleidingen"> 
+        <label class="checkbox">
+          <input type="checkbox" ng-model="begeleiding.enabled"  ng-change="begeleiding.toggle()"/>
+        </label>
+        <h2>{{begeleiding.tekst}} ({{begeleiding.werkvormen.length}})</h2>
       </ion-item>
     </ion-list>
   </ion-content>

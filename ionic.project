@@ -5,11 +5,11 @@
   [
     {
       "path": "/apps",
-      "proxyUrl": "http://192.168.1.6/json-api/apps"
+      "proxyUrl": "http://192.168.1.3/json-api/apps"
     },
     {
       "path": "/werkvormendocent",
-      "proxyUrl": "http://192.168.1.6/json-api/werkvormendocent"
+      "proxyUrl": "http://192.168.1.3/json-api/werkvormendocent"
     }
   ]
 }

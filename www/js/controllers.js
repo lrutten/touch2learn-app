@@ -20,7 +20,8 @@ angular.module('t2l.controllers', [])
 .controller('WoordenCtrl', function($scope, Learn) {
   //console.log("WoordenCtrl function()");
 
-  $scope.intenties = Learn.alleIntenties();
+  $scope.intenties     = Learn.alleIntenties();
+  $scope.begeleidingen = Learn.alleBegeleidingen();
 })
 
 .controller('WerkvormenCtrl', function($scope, Learn) {

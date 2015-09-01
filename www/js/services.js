@@ -4,14 +4,30 @@
 
 var Werkvorm = function(idd, ttl, bdy)
 {
-   this.id    = idd;
-   this.title = ttl;
-   this.body  = bdy;
+   this.id      = idd;
+   this.title   = ttl;
+   this.body    = bdy;
+   this.woorden = new Vocabulaire();
 }
 
 Werkvorm.prototype.toon = function()
 {
-   console.log("id " + this.id + " title " + this.title);
+   console.log("Werkvorm id " + this.id + " title " + this.title);
+   this.woorden.toon();
+}
+
+// wo is geen String maar wel een Object
+Werkvorm.prototype.addWoord = function(wo)
+{
+   //console.log("      woord bijvoegen2 (" + wo + ")");
+   //wo.toon();
+   return this.woorden.addObjWoord(wo);
+}
+
+Werkvorm.prototype.getEnabled = function()
+{
+   //console.log("Werkvorm.getEnabled() " + this.title);
+   return this.woorden.getEnabled();
 }
 
 
@@ -19,14 +35,26 @@ Werkvorm.prototype.toon = function()
 
 var Woord = function(wrd)
 {
-   this.tekst   = wrd;
-   this.enabled = true;
+   this.tekst      = wrd;
+   this.enabled    = true;
+   this.werkvormen = [];
 }
 
 Woord.prototype.toon = function()
 {
-   console.log("Woord " + this.tekst);
+   console.log("Woord " + this.tekst + " " + this.enabled);
 }
+
+Woord.prototype.addWerkvorm = function(wvrm)
+{
+   this.werkvormen.push(wvrm);
+}
+
+Woord.prototype.toggle = function()
+{
+   console.log("Woord toggle() " + this.tekst + " " + this.enabled);
+}
+
 
 /*
  * Voorbeeld
@@ -134,7 +162,9 @@ Vocabulaire.prototype.toon = function()
    for (var w in this.woorden)
    {
       console.log("  w " + w);
-      console.log("  woord " + this.woorden[w].tekst);
+      console.log("  woord " + this.woorden[w].tekst + " " +
+         this.woorden[w].enabled);
+      this.woorden[w].toon();
    }
 }
 
@@ -156,6 +186,14 @@ Vocabulaire.prototype.addWoord = function(w)
    }
 }
 
+Vocabulaire.prototype.addObjWoord = function(wo)
+{
+   var wt = wo.tekst;
+   //console.log("Vocabulaire.addObjWoord(" + wt + ")");
+   this.woorden[wt] = wo;
+   this.teller++;
+}
+
 Vocabulaire.prototype.hasWoord = function(w)
 {
    return this.woorden.hasOwnProperty(w);
@@ -175,6 +213,23 @@ Vocabulaire.prototype.alleWoorden = function()
    return wrden;
 }
 
+Vocabulaire.prototype.getEnabled = function()
+{
+   //console.log("getEnabled()");
+   for (var w in this.woorden)
+   {
+      var wrd = this.woorden[w];
+      //console.log("    wrd.enabled " + wrd.enabled);
+      if (wrd.enabled == true)
+      {
+         //console.log("    true");
+         return true;
+      }
+   }
+   //console.log("    false");
+   return false;
+}
+
 
 
 
@@ -182,14 +237,15 @@ Vocabulaire.prototype.alleWoorden = function()
 
 var TouchInfo = function()
 {
-   this.werkvormen = [];
-   this.intenties = new Vocabulaire();
+   this.werkvormen    = [];
+   this.intenties     = new Vocabulaire();
+   this.begeleidingen = new Vocabulaire();
 }
 
 TouchInfo.prototype.toon = function()
 {
    console.log("TouchInfo #werkvormen " + this.werkvormen.length);
-   this.intenties.toon();
+   //this.intenties.toon();
 }
 
 TouchInfo.prototype.addWerkvorm = function(wvrm)
@@ -200,15 +256,42 @@ TouchInfo.prototype.addWerkvorm = function(wvrm)
 TouchInfo.prototype.addIntentie = function(intnt)
 {
    //console.log("      intentie bijvoegen2 (" + intnt + ")");
-   this.intenties.addWoord(intnt);
+   return this.intenties.addWoord(intnt);
 }
 
+TouchInfo.prototype.addBegeleiding = function(begl)
+{
+   //console.log("      begeleiding bijvoegen2 (" + begl + ")");
+   return this.begeleidingen.addWoord(begl);
+}
+
+/*
 TouchInfo.prototype.alleWerkvormen = function()
 {
    console.log("werkvormen #" + this.werkvormen.length);
    
    return this.werkvormen;
 }
+ */
+
+TouchInfo.prototype.alleWerkvormen = function()
+{
+   console.log("werkvormen #" + this.werkvormen.length);
+   
+   var lijst = [];
+   for (var j=0; j<this.werkvormen.length; j++)
+   {
+      var wvo = this.werkvormen[j];
+      if (wvo.getEnabled() == true)
+      {
+         lijst.push(wvo);
+      }
+   }
+   console.log("lijst #" + lijst.length);
+   //return this.werkvormen;
+   return lijst;
+}
+
 
 TouchInfo.prototype.alleIntenties = function()
 {
@@ -216,7 +299,18 @@ TouchInfo.prototype.alleIntenties = function()
    for (var iw=0; iw<aw.length; iw++)
    {
       var wo = aw[iw];
-      console.log("wo " + wo);
+      console.log("wo i " + wo);
+   }
+   return aw;
+}
+
+TouchInfo.prototype.alleBegeleidingen = function()
+{
+   var aw = this.begeleidingen.alleWoorden();
+   for (var iw=0; iw<aw.length; iw++)
+   {
+      var wo = aw[iw];
+      console.log("wo b " + wo);
    }
    return aw;
 }
@@ -290,8 +384,8 @@ angular.module('t2l.services', [])
    //     http://blog.ionic.io/handling-cors-issues-in-ionic/
 
    //$http.get('http://192.168.1.6/json-api/apps').then(
-   $http.get('http://192.168.1.6/json-api/werkvormendocent').then(
-   //$http.get('http://localhost:8100/werkvormendocent').then(
+   //$http.get('http://192.168.1.6/json-api/werkvormendocent').then(
+   $http.get('http://localhost:8100/werkvormendocent').then(
       function(resp) 
       {
          console.log('Success get', resp);
@@ -300,13 +394,20 @@ angular.module('t2l.services', [])
          var nodes = resp.data.nodes;
          for (var i=0; i<nodes.length; i++)
          {
+	    // A. Haal de werkvorm
+	   
             //console.log("node i ", i);
 	    var node = nodes[i].node;
             //console.log("node      " + node.title);
             //console.log("node nid  " + node.nid);
             //console.log("node body ", node.body);
             //console.log("node intenties " + node.intenties);
+
+	    // B. Maak de werkvorm
+            var wv = new Werkvorm(node.nid, node.title, node.body);
+            touchinfo.addWerkvorm(wv);
 	    
+	    // C. Verwerk de intenties
 	    var intenties = node.intenties.split(",");
 	    
             //console.log("intenties " + intenties);
@@ -320,11 +421,28 @@ angular.module('t2l.services', [])
 	       // Hier verdergaan met bijvoegen intentie in touchinfo
 	       var intntie = intenties[j].trim();
                //console.log("      intentie bijvoegen (" + intntie + ")");
-	       touchinfo.addIntentie(intntie);
+	       var o_intntie = touchinfo.addIntentie(intntie);
+	       o_intntie.addWerkvorm(wv);
+	       //o_intntie.toon();
+	       wv.addWoord(o_intntie);
 	    }
-	    
-            //werkvormen.push(new Werkvorm(node.nid, node.title, node.body));
-            touchinfo.addWerkvorm(new Werkvorm(node.nid, node.title, node.body));
+    
+
+	    // D. Verwerk de begeleiding
+	    //console.log("node begeleiding " + node.begeleiding);
+	    var begeleidingen = node.begeleiding.split(",");
+	    for (var k=0; k<begeleidingen.length; k++)
+	    {
+               //console.log("   begeleiding " + begeleidingen[k].trim());
+	      
+	       
+	       // Hier verdergaan met bijvoegen intentie in touchinfo
+	       var bgl = begeleidingen[k].trim();
+               //console.log("      begeleiding bijvoegen (" + bgl + ")");
+	       var o_bgl = touchinfo.addBegeleiding(bgl);
+	       o_bgl.addWerkvorm(wv);
+	       wv.addWoord(o_bgl);
+	    }
          }
          //touchinfo.toon();
       },
@@ -379,6 +497,11 @@ angular.module('t2l.services', [])
          console.log("Learn.alleIntenties()");
          //return touchinfo.intenties.alleWoorden();
          return touchinfo.alleIntenties();
+      },
+      alleBegeleidingen: function() 
+      {
+         console.log("Learn.alleBegeleidingen()");
+         return touchinfo.alleBegeleidingen();
       }
    };
 });
