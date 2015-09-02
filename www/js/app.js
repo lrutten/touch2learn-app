@@ -79,6 +79,16 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+  .state('tab.wvapp', {
+    url: '/werkvormen/app/:appId',
+    views: {
+        'tab-werkvormen': {
+          templateUrl: 'templates/tab-app.html',
+          controller: 'AppCtrl'
+      }
+    }
+  })
+
   .state('tab.apps', {
     url: '/apps',
     views: {
@@ -129,6 +139,6 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/werkvormen');
 
 });

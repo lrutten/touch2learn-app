@@ -1,7 +1,7 @@
 // constante
 
 //var path = "http://localhost:8100";
-var path = "http://192.168.1.8/json-api"
+var path = "http://192.168.1.5/json-api"
 
 
 // Modelklassen
@@ -45,6 +45,11 @@ var Extra = function(pra, did)
    this.praktijkvoorbeeld = pra;
    this.didopp            = did;
    this.apps              = [];
+}
+
+Extra.prototype.addApp = function(app)
+{
+   this.apps.push(app);
 }
 
 
@@ -312,6 +317,28 @@ TouchInfo.prototype.addApp = function(app)
    this.apps.push(app);
 }
 
+/*
+  bestaat al
+  
+// appId is string
+TouchInfo.prototype.getApp = function(appId)
+{
+   //console.log("TouchInfo getApp(" + appId + ")");
+   var appi = parseInt(appId);
+   for (var i = 0; i < this.apps.length; i++) 
+   {
+      if (this.apps[i].id == appi) 
+      {
+         console.log("TouchInfo-getApp resultaat gevonden");
+	      var app = this.apps[i];
+         return app;
+      }
+   }
+   console.log("TouchInfo-getApp resultaat niet gevonden");
+   return null;
+}
+ */
+
 
 /*
 TouchInfo.prototype.alleWerkvormen = function()
@@ -340,34 +367,38 @@ TouchInfo.prototype.alleWerkvormen = function()
    return lijst;
 }
 
+
 TouchInfo.prototype.getExtra = function($http, wi, werkv)
 {
+   var ti = this;
+   
    //$http.get('http://localhost:8100/werkvormdocent?nid=' + wi).then(
    $http.get(path + '/werkvormdocent?nid=' + wi).then(
       function(resp) 
       {
-         console.log('Success get extra', resp);
+         //console.log('Success get extra', resp);
          var wv = resp.data.werkvormendocent[0].werkvormdocent;
-         console.log("wv " + wv);
-         console.log("wv.apps " + wv.apps);
-         console.log("wv.praktijkvoorbeeld " + wv.praktijkvoorbeeld);
-         console.log("wv.didopp " + wv['didactischeopportuniteiten ']);
+         //console.log("wv " + wv);
+         //console.log("wv.apps " + wv.apps);
+         //console.log("wv.praktijkvoorbeeld " + wv.praktijkvoorbeeld);
+         //console.log("wv.didopp " + wv['didactischeopportuniteiten ']);
  
          werkv.extra = new Extra(wv.praktijkvoorbeeld, wv['didactischeopportuniteiten ']);
 
          var apps = wv.apps.split(",");
     
-         console.log("apps " + apps);
-         console.log("apps.length " + apps.length);
+         //console.log("apps " + apps);
+         //console.log("apps.length " + apps.length);
     
          for (var j=0; j<apps.length; j++)
          {
-            var app = apps[j].trim();
-            console.log("      app bijvoegen (" + app + ")");
-            //var o_intntie = touchinfo.addIntentie(intntie);
-            //o_intntie.addWerkvorm(wv);
-            //o_intntie.toon();
-            //wv.addWoord(o_intntie);
+            var appid = apps[j].trim();
+            //console.log("      app bijvoegen (" + appid + ")");
+            var o_app = ti.getApp($http, appid);
+            if (o_app != null)
+            {
+               werkv.extra.addApp(o_app);
+            }
          }
       },
       function(err) 
@@ -386,7 +417,7 @@ TouchInfo.prototype.getWerkvorm = function($http, werkvormId)
       if (this.werkvormen[i].id == wi) 
       {
          console.log("TouchInfo.getWerkvorm gevonden");
-	 var werkv = this.werkvormen[i];
+    var werkv = this.werkvormen[i];
 	 if (werkv.extra == null)
 	 {
             console.log("   extra null");
@@ -446,6 +477,18 @@ TouchInfo.prototype.getExtraApp = function($http, ai, app)
          console.log("minp "        + ap.minpunten);
          console.log("minp.length " + minp.length);
 
+         var laatstemi = minp.length - 1;
+         if (laatstemi >= 0 && minp[laatstemi].length == 0)
+         {
+            console.log("laatste minp lengte 0");
+            minp.splice(laatstemi, 1);
+         }
+         var laatstepl = plusp.length - 1;
+         if (laatstepl >= 0 && plusp[laatstepl].length == 0)
+         {
+            console.log("laatste plusp lengte 0");
+            plusp.splice(laatstepl, 1);
+         }
          app.extra = new ExtraApp(ap.afbeelding.src, ap.kortebeschrijving, plusp, minp);
 
 	 /*
