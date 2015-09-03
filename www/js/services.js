@@ -1,7 +1,13 @@
 // constante
 
+// PC in test
 //var path = "http://localhost:8100";
-var path = "http://192.168.1.5/json-api"
+
+// GSM in test
+//var path = "http://192.168.1.5/json-api"
+
+// uitbating
+var path = "http://www.touch2learn.be/json-api"
 
 
 // Modelklassen
@@ -653,13 +659,13 @@ angular.module('t2l.services', [])
          console.log('Success get', resp);
          // For JSON responses, resp.data contains the result
        
-         var nodes = resp.data.nodes;
+         var nodes = resp.data.werkvormendocent;
          for (var i=0; i<nodes.length; i++)
          {
 	    // A. Haal de werkvorm
 	   
             //console.log("node i ", i);
-	    var node = nodes[i].node;
+	    var node = nodes[i].werkvormdocent;
             //console.log("node      " + node.title);
             //console.log("node nid  " + node.nid);
             //console.log("node body ", node.body);

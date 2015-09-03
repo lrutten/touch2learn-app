@@ -1,5 +1,13 @@
 angular.module('t2l.controllers', [])
 
+.filter('html',function($sce)
+{
+    return function(input)
+    {
+        return $sce.trustAsHtml(input);
+    }
+})
+
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
@@ -29,7 +37,7 @@ angular.module('t2l.controllers', [])
   $scope.werkvormen = Learn.alleWerkvormen();
 })
 
-.controller('WerkvormCtrl', function($scope, $stateParams, Learn) {
+.controller('WerkvormCtrl', function($scope, $stateParams, $sce, Learn) {
   console.log("WerkvormCtrl function()");
   $scope.werkvorm = Learn.getWerkvorm($stateParams.werkvormId);
 })

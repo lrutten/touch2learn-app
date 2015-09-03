@@ -5,19 +5,19 @@
   [
     {
       "path": "/apps",
-      "proxyUrl": "http://192.168.1.5/json-api/apps"
+      "proxyUrl": "http://www.touch2learn.be/json-api/apps"
     },
     {
       "path": "/app",
-      "proxyUrl": "http://192.168.1.5/json-api/app"
+      "proxyUrl": "http://www.touch2learn.be/json-api/app"
     },
     {
       "path": "/werkvormendocent",
-      "proxyUrl": "http://192.168.1.5/json-api/werkvormendocent"
+      "proxyUrl": "http://www.touch2learn.be/json-api/werkvormendocent"
     },
     {
       "path": "/werkvormdocent",
-      "proxyUrl": "http://192.168.1.5/json-api/werkvormdocent"
+      "proxyUrl": "http://www.touch2learn.be/json-api/werkvormdocent"
     }
   ]
 }
