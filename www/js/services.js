@@ -653,6 +653,8 @@ angular.module('t2l.services', [])
    //$http.get('http://192.168.1.6/json-api/apps').then(
    //$http.get('http://192.168.1.6/json-api/werkvormendocent').then(
    //$http.get('http://localhost:8100/werkvormendocent').then(
+   console.log('path ' + path + '/werkvormendocent');
+   
    $http.get(path + '/werkvormendocent').then(
       function(resp) 
       {
@@ -726,14 +728,14 @@ angular.module('t2l.services', [])
 //   err propname, statusText
 
          for (var propertyName in err) {
-            console.error('err prop name', propertyName);
+            console.error('err prop name' + propertyName);
          }
 
-         console.error('err.status     ', err.status);
-         console.error('err.statusText ', err.statusText);
-         console.error('err.config     ', err.config);
-         console.error('err.headers    ', err.headers);
-         console.error('err.status     ', err.status);
+         console.error('err.status     ' + err.status);
+         console.error('err.statusText ' + err.statusText);
+         console.error('err.config     ' + err.config);
+         console.error('err.headers    ' + err.headers);
+         console.error('err.status     ' + err.status);
       }
    )
    
@@ -808,19 +810,19 @@ angular.module('t2l.services', [])
       },
       function(err) 
       {
-         console.error('ERR', err);
+         console.error('ERR ' + err);
          // err.status will contain the status code
 
          for (var propertyName in err) 
-	 {
-            console.error('err prop name', propertyName);
+	      {
+            console.error('err prop name' +propertyName);
          }
 
-         console.error('err.status     ', err.status);
-         console.error('err.statusText ', err.statusText);
-         console.error('err.config     ', err.config);
-         console.error('err.headers    ', err.headers);
-         console.error('err.status     ', err.status);
+         console.error('err.status     ' + err.status);
+         console.error('err.statusText ' + err.statusText);
+         console.error('err.config     ' + err.config);
+         console.error('err.headers    ' + err.headers);
+         console.error('err.status     ' + err.status);
       }
    )
    
