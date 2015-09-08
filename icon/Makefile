@@ -40,6 +40,12 @@ res/icon/drawable-xxhdpi-icon.png: icon.svg
 res/icon/drawable-xxxhdpi-icon.png: icon.svg
 	inkscape -z -w 192 -h 192  --export-png=res/icon/drawable-xxxhdpi-icon.png icon.svg
 
+icon-groot.png: icon.svg
+	inkscape -z -w 512 -h 512  --export-png=icon-groot.png icon.svg
+
+functieafbeelding.png: functieafbeelding.svg
+	inkscape -z -w 1024 -h 500  --export-png=functieafbeelding.png functieafbeelding.svg
+
 
 
 res/splash/drawable-port-ldpi-screen.png: screen.svg
