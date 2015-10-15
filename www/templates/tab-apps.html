@@ -5,6 +5,7 @@
         class="item-remove-animate item-avatar item-icon-right item-text-wrap" 
         ng-repeat="app in apps" 
         href="#/tab/apps/{{app.id}}">
+        <img ng-src="{{app.extra.afbeelding}}" style="width: 32px; height: 32px">    
         <h2>{{app.title}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>

@@ -1,13 +1,13 @@
 // constante
 
 // PC in test
-//var path = "http://localhost:8100";
+var path = "http://localhost:8100";
 
 // GSM in test
 //var path = "http://192.168.1.5/json-api"
 
 // uitbating
-var path = "http://www.touch2learn.be/json-api"
+//var path = "http://www.touch2learn.be/json-api"
 
 
 // Modelklassen
@@ -461,6 +461,20 @@ TouchInfo.prototype.alleBegeleidingen = function()
 
 TouchInfo.prototype.alleApps = function()
 {
+   // Load all app extra's  
+  /*
+   for (var i = 0; i < this.apps.length; i++) 
+   {
+      var app = this.apps[i];
+ 
+      if (app.extra == null && this.http != null)
+      {
+         console.log("   app extra null");
+         this.getExtraApp(this.http, this.apps[i].id, app);
+         console.log("   extra " + app.extra);
+      }
+   }
+   */
    return this.apps;
 }
 
@@ -766,7 +780,11 @@ angular.module('t2l.services', [])
             var appo = new App(app.nid, app.title);
 	    appo.toon();
             touchinfo.addApp(appo);
-
+	    
+	    // Deze extra oproep haat ook de app extra informatie
+	    // Hierdoor kan de app afbeelding getoond worden.
+            touchinfo.getExtraApp($http, app.nid, appo);
+	    
             /*
 	    // C. Verwerk de intenties
 	    var intenties = node.intenties.split(",");
