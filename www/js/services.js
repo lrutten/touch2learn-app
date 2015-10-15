@@ -1,13 +1,13 @@
 // constante
 
 // PC in test
-var path = "http://localhost:8100";
+//var path = "http://localhost:8100";
 
 // GSM in test
 //var path = "http://192.168.1.5/json-api"
 
 // uitbating
-//var path = "http://www.touch2learn.be/json-api"
+var path = "http://www.touch2learn.be/json-api"
 
 
 // Modelklassen
