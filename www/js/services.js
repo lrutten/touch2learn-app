@@ -1,24 +1,29 @@
-// constante
+// constant
 
 // PC in test
-//var path = "http://localhost:8100";
+//   use this when starting
+//     ionic serve
+var path = "http://localhost:8100";
 
 // GSM in test
 //var path = "http://192.168.1.5/json-api"
 
-// uitbating
-var path = "http://www.touch2learn.be/json-api"
+// deployment
+//var path = "http://www.touch2learn.be/json-api"
 
 
-// Modelklassen
+// Model classes
 
-// Werkvorm klasse
-
+/*
+  Werkvorm class
+  
+  The class represents a werkvorm. 
+ */
 var Werkvorm = function(idd, ttl, bdy)
 {
-   this.id      = idd;
-   this.title   = ttl;
-   this.body    = bdy;
+   this.id      = idd;  // Drupal id
+   this.title   = ttl;  // title
+   this.body    = bdy;  // descriptive text
    this.woorden = new Vocabulaire();
    this.extra   = null;
 }
@@ -29,7 +34,7 @@ Werkvorm.prototype.toon = function()
    this.woorden.toon();
 }
 
-// wo is geen String maar wel een Object
+// wo is not a String but an Object
 Werkvorm.prototype.addWoord = function(wo)
 {
    //console.log("      woord bijvoegen2 (" + wo + ")");
@@ -37,13 +42,16 @@ Werkvorm.prototype.addWoord = function(wo)
    return this.woorden.addObjWoord(wo);
 }
 
+/*
+   This method returns a true when the werkvorm is selected.
+ */
 Werkvorm.prototype.getEnabled = function()
 {
    //console.log("Werkvorm.getEnabled() " + this.title);
    return this.woorden.getEnabled();
 }
 
-// Extra klasse
+// Extra class
 
 
 var Extra = function(pra, did)

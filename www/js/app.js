@@ -1,10 +1,13 @@
-// Ionic Starter App
+// Ionic Touch2Learn App
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
+/*
+  angular.module is a global place for creating, registering and retrieving Angular modules
+ 't2l' is the name of the main angular module (also set in a <body> attribute in index.html)
+ the 2nd parameter is an array of 'requires'
+ 't2l.controllers' is found in controllers.js
+ 't2l.services' is found in services.js
+ */
+ 
 angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
 
 .run(function($ionicPlatform) {
@@ -14,7 +17,6 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -30,7 +32,10 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
+  /*
+    Setup an abstract state for the tabs directive.
+    The url /tab is included in all derived tabs
+   */
   .state('tab', {
     url: '/tab',
     abstract: true,
@@ -38,7 +43,9 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
   })
 
   // Each tab has its own nav history stack:
-
+/*
+  Not used
+  
   .state('tab.dash', {
     url: '/dash',
     views: {
@@ -48,7 +55,11 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
       }
     }
   })
-
+ */
+ 
+ /*
+    Show alle the words which can be switch on and off for selection
+  */
   .state('tab.woorden', {
     url: '/woorden',
     views: {
@@ -59,6 +70,9 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+  /*
+    Show the selection of werkvormen
+   */
   .state('tab.werkvormen', {
     url: '/werkvormen',
     views: {
@@ -69,6 +83,10 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+
+  /*
+    Show one werkvorm
+   */
   .state('tab.werkvorm', {
     url: '/werkvormen/:werkvormId',
     views: {
@@ -79,6 +97,10 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+
+  /*
+    Show one app belonging to a werkvorm
+   */
   .state('tab.wvapp', {
     url: '/werkvormen/app/:appId',
     views: {
@@ -89,6 +111,9 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+  /*
+    Show all apps
+   */
   .state('tab.apps', {
     url: '/apps',
     views: {
@@ -99,6 +124,9 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
     }
   })
 
+  /*
+    Show one app
+   */
   .state('tab.werkapp', {
     url: '/apps/:appId',
     views: {
@@ -107,8 +135,11 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
           controller: 'AppCtrl'
       }
     }
-  })
+  });
 
+/*
+  Not used 
+  
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -137,7 +168,7 @@ angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
       }
     }
   });
-
+  */
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/werkvormen');
 

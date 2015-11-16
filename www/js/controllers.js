@@ -1,3 +1,7 @@
+/*
+  This module contains all the controllers
+ */
+
 angular.module('t2l.controllers', [])
 
 .filter('html',function($sce)
@@ -8,8 +12,12 @@ angular.module('t2l.controllers', [])
     }
 })
 
-.controller('DashCtrl', function($scope) {})
+// not used
+//.controller('DashCtrl', function($scope) {})
 
+/*
+  Not used
+  
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -24,6 +32,11 @@ angular.module('t2l.controllers', [])
     Chats.remove(chat);
   };
 })
+ */
+
+/*
+  All the following modules make use of the Learn service.
+ */
 
 .controller('WoordenCtrl', function($scope, Learn) {
   //console.log("WoordenCtrl function()");
@@ -50,8 +63,11 @@ angular.module('t2l.controllers', [])
 .controller('AppCtrl', function($scope,  $stateParams, Learn) {
   console.log("AppCtrl function()");
   $scope.app = Learn.getApp($stateParams.appId);
-})
+});
 
+/*
+  Not used
+  
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
@@ -61,3 +77,5 @@ angular.module('t2l.controllers', [])
     enableFriends: true
   };
 });
+ */
+
