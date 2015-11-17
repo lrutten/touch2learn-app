@@ -8,7 +8,7 @@ var path = "http://localhost:8100";
 // GSM in test
 //var path = "http://192.168.1.5/json-api"
 
-// deployment
+// deployment on Android
 //var path = "http://www.touch2learn.be/json-api"
 
 
@@ -51,14 +51,20 @@ Werkvorm.prototype.getEnabled = function()
    return this.woorden.getEnabled();
 }
 
-// Extra class
 
+/*
+   Extra class
+   
+   This class represents the extra information for a werkvorm.
+   The extra information is optional for a werkvorm.
+   
+ */
 
 var Extra = function(pra, did)
 {
-   this.praktijkvoorbeeld = pra;
-   this.didopp            = did;
-   this.apps              = [];
+   this.praktijkvoorbeeld = pra;  // text for practical use examples
+   this.didopp            = did;  // Didactic opportunities
+   this.apps              = [];   // list apps
 }
 
 Extra.prototype.addApp = function(app)
@@ -67,8 +73,12 @@ Extra.prototype.addApp = function(app)
 }
 
 
-// klasse App
-
+/*
+   App class
+   
+   This class represents an app.
+ */
+ 
 var App = function(nd, ttl)
 {
    this.id    = nd;
@@ -81,23 +91,30 @@ App.prototype.toon = function()
    console.log("App " + this.id + " " + this.title);
 }
 
-// ExtraApp klasse
+/*
+   ExtraApp class
+   
+   When the extra app information is loaded, an object of this class is created.
+ */
 
 var ExtraApp = function(afb, kor, plusp, minp)
 {
-   this.afbeelding        = afb;
-   this.kortebeschrijving = kor;
-   this.pluspunten        = plusp;
-   this.minpunten         = minp;
+   this.afbeelding        = afb;   // URL of the image
+   this.kortebeschrijving = kor;   // short description   
+   this.pluspunten        = plusp; // advantages
+   this.minpunten         = minp;  // disadvantages
 }
 
-// Woord klasse
+/*
+   Woord class
 
+ */
+ 
 var Woord = function(wrd)
 {
-   this.tekst      = wrd;
-   this.enabled    = true;
-   this.werkvormen = [];
+   this.tekst      = wrd;    // tekst of word
+   this.enabled    = true;   // is this word enabled
+   this.werkvormen = [];     // corresponding werkvormen
 }
 
 Woord.prototype.toon = function()
@@ -117,7 +134,7 @@ Woord.prototype.toggle = function()
 
 
 /*
- * Voorbeeld
+ * Hashtable example
 
  http://www.mojavelinux.com/articles/javascript_hashes.html
 
@@ -207,8 +224,12 @@ function HashTable(obj)
 */
 
 
-// Vocabulaire klasse
+/*
+   Vocabulaire class
+   
+   This class keeps a hashmap of words
 
+ */
 var Vocabulaire = function()
 {
    this.teller  = 0;
@@ -228,6 +249,8 @@ Vocabulaire.prototype.toon = function()
    }
 }
 
+// Add a string to the hashmap
+// and return it as a Woord object.
 Vocabulaire.prototype.addWoord = function(w)
 {
    //console.log("      intentie bijvoegen3 (" + w + ")");
@@ -246,6 +269,7 @@ Vocabulaire.prototype.addWoord = function(w)
    }
 }
 
+// Add a Woord object to the hashmap.
 Vocabulaire.prototype.addObjWoord = function(wo)
 {
    var wt = wo.tekst;
@@ -254,11 +278,13 @@ Vocabulaire.prototype.addObjWoord = function(wo)
    this.teller++;
 }
 
+// Does a word exist in the hashmap? 
 Vocabulaire.prototype.hasWoord = function(w)
 {
    return this.woorden.hasOwnProperty(w);
 }
 
+// Return a list of all words.
 Vocabulaire.prototype.alleWoorden = function()
 {
    console.log("alleWoorden()");
@@ -273,6 +299,8 @@ Vocabulaire.prototype.alleWoorden = function()
    return wrden;
 }
 
+// A Vocabulaire object is enabled when there is at least
+// one enabled word.
 Vocabulaire.prototype.getEnabled = function()
 {
    //console.log("getEnabled()");
@@ -293,7 +321,11 @@ Vocabulaire.prototype.getEnabled = function()
 
 
 
-// TouchInfo klasse
+/*
+   TouchInfo class
+   
+   This class keeps all the touch2learn information.
+ */
 
 var TouchInfo = function()
 {
@@ -344,7 +376,7 @@ TouchInfo.prototype.getApp = function(appId)
       if (this.apps[i].id == appi) 
       {
          console.log("TouchInfo-getApp resultaat gevonden");
-	      var app = this.apps[i];
+         var app = this.apps[i];
          return app;
       }
    }
@@ -363,6 +395,7 @@ TouchInfo.prototype.alleWerkvormen = function()
 }
  */
 
+// Return a list of all werkvormen.
 TouchInfo.prototype.alleWerkvormen = function()
 {
    console.log("werkvormen #" + this.werkvormen.length);
@@ -381,15 +414,25 @@ TouchInfo.prototype.alleWerkvormen = function()
    return lijst;
 }
 
-
+/*
+    Fetch the extra info for a werkvorm.
+    Paramaters:
+      * $http  AngularJS HTTP connection
+      * wi     the id of the werkvorm
+      * werkv  werkvorm object
+ */
 TouchInfo.prototype.getExtra = function($http, wi, werkv)
 {
+   // Keep the TouchInfo in a seperate variable,
+   // otherwise the clallbacks can't access it.
    var ti = this;
    
    //$http.get('http://localhost:8100/werkvormdocent?nid=' + wi).then(
    $http.get(path + '/werkvormdocent?nid=' + wi).then(
       function(resp) 
       {
+         // Decode the JSON data
+         
          //console.log('Success get extra', resp);
          var wv = resp.data.werkvormendocent[0].werkvormdocent;
          //console.log("wv " + wv);
@@ -397,6 +440,7 @@ TouchInfo.prototype.getExtra = function($http, wi, werkv)
          //console.log("wv.praktijkvoorbeeld " + wv.praktijkvoorbeeld);
          //console.log("wv.didopp " + wv['didactischeopportuniteiten ']);
  
+         // Make the Extra object
          werkv.extra = new Extra(wv.praktijkvoorbeeld, wv['didactischeopportuniteiten ']);
 
          var apps = wv.apps.split(",");
@@ -408,6 +452,8 @@ TouchInfo.prototype.getExtra = function($http, wi, werkv)
          {
             var appid = apps[j].trim();
             //console.log("      app bijvoegen (" + appid + ")");
+
+            // Add the app, it may already exist
             var o_app = ti.getApp($http, appid);
             if (o_app != null)
             {
@@ -422,6 +468,8 @@ TouchInfo.prototype.getExtra = function($http, wi, werkv)
    )
 }
 
+// Get a werkvorm.
+// If necessary, fetch the extra info.
 TouchInfo.prototype.getWerkvorm = function($http, werkvormId)
 {
    console.log("TouchInfo.getWerkvorm " + werkvormId);
@@ -431,13 +479,13 @@ TouchInfo.prototype.getWerkvorm = function($http, werkvormId)
       if (this.werkvormen[i].id == wi) 
       {
          console.log("TouchInfo.getWerkvorm gevonden");
-    var werkv = this.werkvormen[i];
-	 if (werkv.extra == null)
-	 {
+         var werkv = this.werkvormen[i];
+         if (werkv.extra == null)
+         {
             console.log("   extra null");
-	    this.getExtra($http, wi, werkv);
+            this.getExtra($http, wi, werkv);
             console.log("   extra " + werkv.extra);
-	 }
+         }
          return werkv;
       }
    }
@@ -445,6 +493,7 @@ TouchInfo.prototype.getWerkvorm = function($http, werkvormId)
    return null;
 }
 
+// Return all intention words.
 TouchInfo.prototype.alleIntenties = function()
 {
    var aw = this.intenties.alleWoorden();
@@ -456,6 +505,7 @@ TouchInfo.prototype.alleIntenties = function()
    return aw;
 }
 
+// Return all the coaching words.
 TouchInfo.prototype.alleBegeleidingen = function()
 {
    var aw = this.begeleidingen.alleWoorden();
@@ -467,6 +517,7 @@ TouchInfo.prototype.alleBegeleidingen = function()
    return aw;
 }
 
+// Return all apps.
 TouchInfo.prototype.alleApps = function()
 {
    // Load all app extra's  
@@ -486,6 +537,11 @@ TouchInfo.prototype.alleApps = function()
    return this.apps;
 }
 
+// Fetch all the extra app info.
+// parameters:
+//  * $http    HTTP connection
+//  * ai       app id
+//  * app      app object
 TouchInfo.prototype.getExtraApp = function($http, ai, app)
 {
    //$http.get('http://localhost:8100/app?nid=' + ai).then(
@@ -519,16 +575,16 @@ TouchInfo.prototype.getExtraApp = function($http, ai, app)
          }
          app.extra = new ExtraApp(ap.afbeelding.src, ap.kortebeschrijving, plusp, minp);
 
-	 /*
-	  Nog af te halen:
-	     kortebeschrijving
-	     minpunten
-	     pluspunten
-	     webapp
-	     windowsapp
-	     iosapp
-	     androidapp
-	 
+    /*
+     Nog af te halen:
+        kortebeschrijving
+        minpunten
+        pluspunten
+        webapp
+        windowsapp
+        iosapp
+        androidapp
+    
          var apps = wv.apps.split(",");
     
          console.log("apps " + apps);
@@ -552,6 +608,12 @@ TouchInfo.prototype.getExtraApp = function($http, ai, app)
    )
 }
 
+// Fetch the app information.
+// If necessary, the extra info is fetched as well.
+//
+// parameters:
+//  * $http  HTTP connection
+//  * appId  app id to be fetched
 TouchInfo.prototype.getApp = function($http, appId)
 {
    console.log("TouchInfo.getApp " + appId);
@@ -561,15 +623,15 @@ TouchInfo.prototype.getApp = function($http, appId)
       if (this.apps[i].id == ai) 
       {
          console.log("TouchInfo.getApp gevonden");
-	 var app = this.apps[i];
-	 
-	 if (app.extra == null)
-	 {
+         var app = this.apps[i];
+    
+         if (app.extra == null)
+         {
             console.log("   app extra null");
-	    this.getExtraApp($http, ai, app);
+            this.getExtraApp($http, ai, app);
             console.log("   extra " + app.extra);
-	 }
-	 
+         }
+    
          return app;
       }
    }
@@ -584,6 +646,9 @@ TouchInfo.prototype.getApp = function($http, appId)
 
 angular.module('t2l.services', [])
 
+/*
+  Not used
+  
 .factory('Chats', function() 
 {
   // Might use a resource here that returns a JSON array
@@ -639,9 +704,14 @@ angular.module('t2l.services', [])
     }
   };
 })
+ */
 
+/*
+  The Learn service
+ */
 .factory('Learn', function($http, $rootScope)
 {
+   // Global touch2learn information
    var touchinfo = new TouchInfo();
    
    // Debug ui-router
@@ -676,7 +746,8 @@ angular.module('t2l.services', [])
    //$http.get('http://192.168.1.6/json-api/werkvormendocent').then(
    //$http.get('http://localhost:8100/werkvormendocent').then(
    console.log('path ' + path + '/werkvormendocent');
-   
+
+   // Fetch all the werkvorm information.
    $http.get(path + '/werkvormendocent').then(
       function(resp) 
       {
@@ -686,55 +757,52 @@ angular.module('t2l.services', [])
          var nodes = resp.data.werkvormendocent;
          for (var i=0; i<nodes.length; i++)
          {
-	    // A. Haal de werkvorm
-	   
+            // A. Haal de werkvorm
+      
             //console.log("node i ", i);
-	    var node = nodes[i].werkvormdocent;
+            var node = nodes[i].werkvormdocent;
             //console.log("node      " + node.title);
             //console.log("node nid  " + node.nid);
             //console.log("node body ", node.body);
             //console.log("node intenties " + node.intenties);
 
-	    // B. Maak de werkvorm
+            // B. Maak de werkvorm
             var wv = new Werkvorm(node.nid, node.title, node.body);
             touchinfo.addWerkvorm(wv);
-	    
-	    // C. Verwerk de intenties
-	    var intenties = node.intenties.split(",");
-	    
+       
+            // C. Verwerk de intenties
+            var intenties = node.intenties.split(",");
+       
             //console.log("intenties " + intenties);
             //console.log("intenties " + intenties.length);
-	    
-	    for (var j=0; j<intenties.length; j++)
-	    {
+       
+            for (var j=0; j<intenties.length; j++)
+            {
                //console.log("   intentie " + intenties[j].trim());
-	      
-	       
-	       // Hier verdergaan met bijvoegen intentie in touchinfo
-	       var intntie = intenties[j].trim();
+               
+               // Hier verdergaan met bijvoegen intentie in touchinfo
+               var intntie = intenties[j].trim();
                //console.log("      intentie bijvoegen (" + intntie + ")");
-	       var o_intntie = touchinfo.addIntentie(intntie);
-	       o_intntie.addWerkvorm(wv);
-	       //o_intntie.toon();
-	       wv.addWoord(o_intntie);
-	    }
-    
+               var o_intntie = touchinfo.addIntentie(intntie);
+               o_intntie.addWerkvorm(wv);
+               //o_intntie.toon();
+               wv.addWoord(o_intntie);
+            }
 
-	    // D. Verwerk de begeleiding
-	    //console.log("node begeleiding " + node.begeleiding);
-	    var begeleidingen = node.begeleiding.split(",");
-	    for (var k=0; k<begeleidingen.length; k++)
-	    {
+            // D. Verwerk de begeleiding
+            //console.log("node begeleiding " + node.begeleiding);
+            var begeleidingen = node.begeleiding.split(",");
+            for (var k=0; k<begeleidingen.length; k++)
+            {
                //console.log("   begeleiding " + begeleidingen[k].trim());
-	      
-	       
-	       // Hier verdergaan met bijvoegen intentie in touchinfo
-	       var bgl = begeleidingen[k].trim();
+               
+               // Hier verdergaan met bijvoegen intentie in touchinfo
+               var bgl = begeleidingen[k].trim();
                //console.log("      begeleiding bijvoegen (" + bgl + ")");
-	       var o_bgl = touchinfo.addBegeleiding(bgl);
-	       o_bgl.addWerkvorm(wv);
-	       wv.addWoord(o_bgl);
-	    }
+               var o_bgl = touchinfo.addBegeleiding(bgl);
+               o_bgl.addWerkvorm(wv);
+               wv.addWoord(o_bgl);
+            }
          }
          //touchinfo.toon();
       },
@@ -743,13 +811,14 @@ angular.module('t2l.services', [])
          console.error('ERR', err);
          // err.status will contain the status code
 
-//   err propname, data
-//   err propname, status
-//   err propname, headers
-//   err propname, config
-//   err propname, statusText
+         //   err propname, data
+         //   err propname, status
+         //   err propname, headers
+         //   err propname, config
+         //   err propname, statusText
 
-         for (var propertyName in err) {
+         for (var propertyName in err)
+         {
             console.error('err prop name' + propertyName);
          }
 
@@ -761,9 +830,7 @@ angular.module('t2l.services', [])
       }
    )
    
-   
-   
-   // Lees alle apps
+   // Fetch all apps
    //$http.get('http://localhost:8100/apps').then(
    $http.get(path + '/apps').then(
       function(resp) 
@@ -774,63 +841,60 @@ angular.module('t2l.services', [])
          var apps = resp.data.apps;
          for (var i=0; i<apps.length; i++)
          {
-	    // A. Haal de app
-	   
+            // A. Haal de app
+            
             //console.log("node i ", i);
-	    var app = apps[i].app;
+            var app = apps[i].app;
             console.log("app      " + app.title);
             console.log("app nid  " + app.nid);
             //console.log("node body ", node.body);
             //console.log("node intenties " + node.intenties);
-
-   
-	    // B. Maak het app object
+            
+            
+            // B. Maak het app object
             var appo = new App(app.nid, app.title);
-	    appo.toon();
+            appo.toon();
             touchinfo.addApp(appo);
-	    
-	    // Deze extra oproep haat ook de app extra informatie
-	    // Hierdoor kan de app afbeelding getoond worden.
+            
+            // Deze extra oproep haat ook de app extra informatie
+            // Hierdoor kan de app afbeelding getoond worden.
             touchinfo.getExtraApp($http, app.nid, appo);
-	    
+       
             /*
-	    // C. Verwerk de intenties
-	    var intenties = node.intenties.split(",");
-	    
+            // C. Verwerk de intenties
+            var intenties = node.intenties.split(",");
+            
             //console.log("intenties " + intenties);
             //console.log("intenties " + intenties.length);
-	    
-	    for (var j=0; j<intenties.length; j++)
-	    {
+            
+            for (var j=0; j<intenties.length; j++)
+            {
                //console.log("   intentie " + intenties[j].trim());
-	      
-	       
-	       // Hier verdergaan met bijvoegen intentie in touchinfo
-	       var intntie = intenties[j].trim();
+               
+               // Hier verdergaan met bijvoegen intentie in touchinfo
+               var intntie = intenties[j].trim();
                //console.log("      intentie bijvoegen (" + intntie + ")");
-	       var o_intntie = touchinfo.addIntentie(intntie);
-	       o_intntie.addWerkvorm(wv);
-	       //o_intntie.toon();
-	       wv.addWoord(o_intntie);
-	    }
-    
+               var o_intntie = touchinfo.addIntentie(intntie);
+               o_intntie.addWerkvorm(wv);
+               //o_intntie.toon();
+               wv.addWoord(o_intntie);
+            }
 
-	    // D. Verwerk de begeleiding
-	    //console.log("node begeleiding " + node.begeleiding);
-	    var begeleidingen = node.begeleiding.split(",");
-	    for (var k=0; k<begeleidingen.length; k++)
-	    {
+            // D. Verwerk de begeleiding
+            //console.log("node begeleiding " + node.begeleiding);
+            var begeleidingen = node.begeleiding.split(",");
+            for (var k=0; k<begeleidingen.length; k++)
+            {
                //console.log("   begeleiding " + begeleidingen[k].trim());
-	      
-	       
-	       // Hier verdergaan met bijvoegen intentie in touchinfo
-	       var bgl = begeleidingen[k].trim();
+               
+               // Hier verdergaan met bijvoegen intentie in touchinfo
+               var bgl = begeleidingen[k].trim();
                //console.log("      begeleiding bijvoegen (" + bgl + ")");
-	       var o_bgl = touchinfo.addBegeleiding(bgl);
-	       o_bgl.addWerkvorm(wv);
-	       wv.addWoord(o_bgl);
-	    }
-	    */
+               var o_bgl = touchinfo.addBegeleiding(bgl);
+               o_bgl.addWerkvorm(wv);
+               wv.addWoord(o_bgl);
+            }
+            */
          }
          //touchinfo.toon();
       },
@@ -840,7 +904,7 @@ angular.module('t2l.services', [])
          // err.status will contain the status code
 
          for (var propertyName in err) 
-	      {
+         {
             console.error('err prop name' +propertyName);
          }
 
@@ -850,47 +914,39 @@ angular.module('t2l.services', [])
          console.error('err.headers    ' + err.headers);
          console.error('err.status     ' + err.status);
       }
-   )
+   )  // end get()
+  
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-  // Some fake testing data
-  /*
-  var werkvormen = 
-  [
-    new Werkvorm(9, "Denken"),
-    new Werkvorm(8, "Schrijven")
-  ];
+   // Some fake testing data
+   /*
+   var werkvormen = 
+   [
+      new Werkvorm(9, "Denken"),
+      new Werkvorm(8, "Schrijven")
+   ];
    */
   
-  //werkvormen.push(new Werkvorm(9, "Denken"));
-  //werkvormen.push(new Werkvorm(8, "Schrijven"));
+   //werkvormen.push(new Werkvorm(9, "Denken"));
+   //werkvormen.push(new Werkvorm(8, "Schrijven"));
 
+   // The service exposes these functions.
    return {
       alleWerkvormen: function() 
       {
          console.log("Learn.alleWerkvormen()");
-
-	 //var wv = new Werkvorm(7, "lezen");
+         
+         //var wv = new Werkvorm(7, "lezen");
          //wv.toon();
-	 
+         
          //return touchinfo.werkvormen;
          return touchinfo.alleWerkvormen();
       },
       getWerkvorm: function(werkvormId)
       {
          console.log("Learn.getWerkvorm() " + werkvormId);
-
-	 return touchinfo.getWerkvorm($http, werkvormId);
+         
+         return touchinfo.getWerkvorm($http, werkvormId);
       },
       alleIntenties: function() 
       {
@@ -911,8 +967,8 @@ angular.module('t2l.services', [])
       getApp: function(appId)
       {
          console.log("Learn.getApp() " + appId);
-
-	 return touchinfo.getApp($http, appId);
+         
+         return touchinfo.getApp($http, appId);
       }
    };
 });
