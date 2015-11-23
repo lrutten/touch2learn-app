@@ -8,10 +8,22 @@
  't2l.services' is found in services.js
  */
  
-angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services'])
+angular.module('t2l', ['ionic', 't2l.controllers', 't2l.services', 'angular-cache'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $http, CacheFactory) {
   $ionicPlatform.ready(function() {
+    // angular-cache part
+    //    Only his part uses $http and CacheFactory parameters
+    // see
+    //    https://github.com/jmdobry/angular-cache
+    $http.defaults.cache = CacheFactory('defaultCache', 
+    {
+       maxAge:       12 *  60 * 60 * 1000, // Items added to this cache expire after 12 houres
+       cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+       deleteOnExpire:     'aggressive',   // Items will be deleted from this cache when they expire
+       storageMode:        'localStorage'  // This cache will use `localStorage`.
+    });
+    
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {

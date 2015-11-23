@@ -428,7 +428,10 @@ TouchInfo.prototype.getExtra = function($http, wi, werkv)
    var ti = this;
    
    //$http.get('http://localhost:8100/werkvormdocent?nid=' + wi).then(
-   $http.get(path + '/werkvormdocent?nid=' + wi).then(
+   $http.get(path + '/werkvormdocent?nid=' + wi, 
+   {
+      cache: true
+   }).then(
       function(resp) 
       {
          // Decode the JSON data
@@ -545,7 +548,10 @@ TouchInfo.prototype.alleApps = function()
 TouchInfo.prototype.getExtraApp = function($http, ai, app)
 {
    //$http.get('http://localhost:8100/app?nid=' + ai).then(
-   $http.get(path + '/app?nid=' + ai).then(
+   $http.get(path + '/app?nid=' + ai,
+   {
+      cache: true
+   }).then(
       function(resp) 
       {
          console.log('Success get extraapp', resp);
@@ -748,7 +754,10 @@ angular.module('t2l.services', [])
    console.log('path ' + path + '/werkvormendocent');
 
    // Fetch all the werkvorm information.
-   $http.get(path + '/werkvormendocent').then(
+   $http.get(path + '/werkvormendocent',
+   {
+      cache: true
+   }).then(
       function(resp) 
       {
          console.log('Success get', resp);
@@ -832,7 +841,10 @@ angular.module('t2l.services', [])
    
    // Fetch all apps
    //$http.get('http://localhost:8100/apps').then(
-   $http.get(path + '/apps').then(
+   $http.get(path + '/apps',
+   {
+      cache: true
+   }).then(
       function(resp) 
       {
          console.log('Success apps get', resp);
