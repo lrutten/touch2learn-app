@@ -3,13 +3,13 @@
 // PC in test
 //   use this when starting
 //     ionic serve
-var path = "http://localhost:8100";
+//var path = "http://localhost:8100";
 
 // GSM in test
 //var path = "http://192.168.1.5/json-api"
 
 // deployment on Android
-//var path = "http://www.touch2learn.be/json-api"
+var path = "http://www.touch2learn.be/json-api"
 
 
 // Model classes
