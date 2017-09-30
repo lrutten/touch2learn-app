@@ -1,3 +1,8 @@
+# Touch2learn app
+
+Dit is de broncode van de Touch2learn app.
+Deze app is met Ionic gebouwd.
+
 # 404 probleem
 
 Alleen de Android apk met daarin WebView is niet in staat om
